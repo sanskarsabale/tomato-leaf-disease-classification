@@ -1,3 +1,9 @@
+## Live demo
+(https://tomato-leaf-disease-classification-n4rctkhgyqrjfnsaejdstv.streamlit.app/)
+
+## Trained model
+(https://huggingface.co/sanskar69/tomato-resnet50/tree/main)
+
 # Tomato Leaf Disease Classification (ResNet50)
 
 Classifies a tomato leaf photo into 10 classes (9 diseases + healthy) using
