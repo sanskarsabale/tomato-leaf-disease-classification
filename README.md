@@ -36,7 +36,7 @@ transfer learning with a pretrained ResNet50, and shows the result in a Streamli
 
 ## Download the trained model
 The model file (201 MB) is too large for GitHub:
-PASTE_DRIVE_LINK_HERE
+https://drive.google.com/file/d/1X67wuCumRU0-eRjeeyZLe0WDIvc5uAYh/view?usp=sharing
 
 Put tomato_resnet50_final.keras inside the models/ folder.
 
