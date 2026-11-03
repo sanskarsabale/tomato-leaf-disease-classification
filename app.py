@@ -1,12 +1,17 @@
+import os
 import json
 import numpy as np
 import streamlit as st
 import tensorflow as tf
 from PIL import Image
+from huggingface_hub import hf_hub_download
 from tensorflow.keras.applications.resnet50 import preprocess_input
 
 st.set_page_config(page_title="Tomato Leaf Disease Classifier", page_icon="🍅")
 
+MODEL_REPO = "sanskar69/tomato-resnet50"      # change this
+MODEL_FILE = "tomato_resnet50_final.keras"
+LOCAL_MODEL = os.path.join("models", MODEL_FILE)
 CONF_THRESHOLD = 0.70
 
 DISEASE_INFO = {
@@ -24,12 +29,16 @@ DISEASE_INFO = {
 
 @st.cache_resource
 def load_model_and_classes():
-    model = tf.keras.models.load_model("models/tomato_resnet50_final.keras")
-    with open("models/class_names.json") as f:
+    # Use the local file if it exists (your PC), otherwise download it (online)
+    path = LOCAL_MODEL if os.path.exists(LOCAL_MODEL) else hf_hub_download(
+        repo_id=MODEL_REPO, filename=MODEL_FILE)
+    model = tf.keras.models.load_model(path, compile=False)
+    with open(os.path.join("models", "class_names.json")) as f:
         classes = json.load(f)
     return model, classes
 
-model, class_names = load_model_and_classes()
+with st.spinner("Loading model (first start can take a minute)..."):
+    model, class_names = load_model_and_classes()
 
 st.title("🍅 Tomato Leaf Disease Classifier")
 st.write("Upload a clear photo of a single tomato leaf. Works best with a plain background.")
@@ -59,3 +68,7 @@ if file is not None:
     st.write("**Top 3 predictions**")
     for i in top:
         st.write(f"{class_names[i].replace('Tomato___', '').replace('_', ' ')}: {probs[i]*100:.1f}%")
+
+st.caption("Predictions are model estimates, not a diagnosis. The model was trained on "
+           "single-leaf photos with plain backgrounds and can be confidently wrong on other images. "
+           "Consult an agricultural expert for real decisions.")
